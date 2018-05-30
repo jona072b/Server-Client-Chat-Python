@@ -1,4 +1,4 @@
-import socket, threading
+import socket, threading, Constants
 
 #receiving method for messages
 def recvMessages(meSocket):
@@ -7,17 +7,17 @@ def recvMessages(meSocket):
         print('Received from server: ' + data)
         #changes to made 1-4
 
-host = 'localhost'
-port = 5000
+host = Constants.getIp()
+port = Constants.getPort()
 messages = ""
 
 mySocket = socket.socket()
 mySocket.connect((host,port))
 
-t = threading.Thread(target=recvMessages, args= (mySocket))
+t = threading.Thread(target=recvMessages, args= (mySocket,))
 t.start()
 
-while messages!= 'q':
+while messages!= 'exit':
     messages = input(":")
     mySocket.send(messages.encode())
 

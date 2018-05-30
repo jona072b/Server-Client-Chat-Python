@@ -1,10 +1,10 @@
-import socket, threading, queue
+import socket, threading, queue, Constants
 
 messages = queue.Queue()
 clients = []
 
-host = "localhost"
-port = 5000
+host = Constants.getIp()
+port = Constants.getPort()
 
 mySocket = socket.socket()
 mySocket.bind((host,port))
@@ -19,7 +19,7 @@ def listenForCLients(socket):
         #Saving to client list
         clients.append(conn)
         #Making new thread for new client
-        T_newClient = threading.Thread(target= workerClient, args=(conn))
+        T_newClient = threading.Thread(target= workerClient, args=(conn,))
         T_newClient.start()
 
 #This thread recieves messages from clients
@@ -39,7 +39,7 @@ def broadcast():
 
 
 #Thread that listens for new clients
-T_listenForClients = threading.Thread(target=listenForCLients,args=(mySocket))
+T_listenForClients = threading.Thread(target=listenForCLients,args=(mySocket,))
 T_listenForClients.start()
 
 
