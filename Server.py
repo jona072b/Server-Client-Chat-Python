@@ -1,4 +1,4 @@
-import socket, threading, queue, Constants
+import socket, threading, queue, Constants, time
 
 messages = queue.Queue()
 clients = []
@@ -21,16 +21,17 @@ def listenForCLients(socket):
         clients.append(conn)
         print("Client added")
         #Making new thread for new client
-        T_newClient = threading.Thread(target= workerClient, args=(conn,))
+        T_newClient = threading.Thread(target= workerClient, args=(conn, messages))
         T_newClient.start()
 
 #This thread recieves messages from clients
-def workerClient(connection):
+def workerClient(connection, msg_queue):
     while True:
         #Changes will be made.
         data = connection.recv(1024).decode()
         print("Message recieved from client: " + data)
         messages.put(data)
+        msg_queue.put(data)
 
 def broadcast():
     while True:

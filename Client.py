@@ -1,55 +1,115 @@
 import socket, threading, Constants
 
+
+#####################################################
+#                   String Logic                    #
+#####################################################
 import self as self
+import hashlib
+from cryptography.fernet import Fernet
+import base64
 
 
 class StringLogic:
 
 
-    def steganography(self,msg):
+    def steganography(self, msg):
 
         pass
 
 
-    def hash(self,msg):
-        pass
+    def hash(self, msg):
+        value = msg[:1]
+        message = msg[1:]
+        hashedValue = hashlib.md5(message.encode('utf-8')).hexdigest()
+        result = value + hashedValue
+        return result.encode()
 
 
     def encryption(self,msg):
-        pass
+        value = msg[:1]
+        key = Constants.getKey()
+        message = msg[1:]
+        cipher_suite = Fernet(key)
+        cipher_text = cipher_suite.encrypt(str.encode(message))
+        string = value + cipher_text.decode("utf-8")
+        cipher_text = string.encode()
+        return cipher_text
 
 
     def ascii(self,msg):
-        value = msg[0]
-        for c in msg:
+        value = msg[:1]
+        message = msg[1:]
+        for c in message:
             value = str(value) + str(ord(c)) + ","
 
-        return value
+        return value[:-1].encode()
+
+
+#####################################################
+#            reverse string logic                   #
+#####################################################
+import string
+
+
+
+def fromValueToList(self, message):
+    #Stripping the string from whitespaces in the end and beginning
+    string = message.strip()
+    #Splitting string on comma
+    string = string.split(",")
+    return string
 
 
 class ReverseStringLogic:
-
 
     def reverseSteganography(self,msg):
         print("Steganography: " + msg)
         pass
 
-    def reverseHash(self,msg):
-        print("Hash: " + msg)
-        pass
+    def bruteForce(self,msg):
+        message = msg[1:]
+        letterList = string.ascii_lowercase
+        for i in letterList:
+            for j in letterList:
+                for k in letterList:
+                    combo = i+j+k
+                    hashedCombo = hashlib.md5(combo.encode('utf-8')).hexdigest()
+                    if hashedCombo == message:
+                        print ("bruteforce: " + combo)
+
 
 
     def decryption(self,msg):
-        print("Encryption: " + msg)
-        pass
-
+        key = Constants.getKey()
+        cipher_suite = Fernet(key)
+        plainText = cipher_suite.decrypt(msg[1:].encode())
+        print(plainText.decode())
 
     def reverseAscii(self,msg):
-        print("Ascii: " + msg)
-        pass
+        #Removing first character that is number 4
+        message = msg[1:]
+        #Variable for holding the end result
+        result = ""
+        #List for holding the ascii values
+        list = fromValueToList(self, message)
+
+        for letter in list:
+            #converts numbers to letters
+            result = result + chr(int(letter))
+
+        print ("FROM SERVER" + result)
 
 
-def recvMessages(meSocket):
+
+
+
+#####################################################
+#                   Recieve method                  #
+#####################################################
+
+
+def recvMessages(mySocket):
     while True:
         data =  mySocket.recv(1024).decode()
         print("Recieved Data")
@@ -59,7 +119,7 @@ def recvMessages(meSocket):
             ReverseStringLogic.reverseSteganography(self, data)
 
         elif first == "2":
-            ReverseStringLogic.reverseHash(self, data)
+            ReverseStringLogic.bruteForce(self, data)
 
         elif first == "3":
             ReverseStringLogic.decryption(self, data)
@@ -69,37 +129,47 @@ def recvMessages(meSocket):
         else:
             print("Error: " + data)
 
-host = Constants.getIp()
-port = Constants.getPort()
-messages = ""
+#####################################################
+#                   MAIN                            #
+#####################################################
 
-mySocket = socket.socket()
-mySocket.connect((host,port))
+def Main():
 
-t = threading.Thread(target=recvMessages, args= (mySocket,))
-t.start()
+    host = Constants.getIp()
+    port = Constants.getPort()
+    messages = ""
 
-while messages!= 'exit':
-    messages = input(":")
+    mySocket = socket.socket()
+    mySocket.connect((host,port))
 
-    first = messages[0]
+    t = threading.Thread(target=recvMessages, args= (mySocket,))
+    t.start()
 
-    if first == "1":
-        messages = StringLogic.Steganography(self, messages)
+    while messages!= 'exit':
+        messages = input(":")
 
-    elif first == "2":
-        messages = StringLogic.Hash(self, messages)
+        first = messages[0]
 
-    elif first == "3":
-        messages = StringLogic.encryption(self, messages)
+        if first == "1":
+            messages = StringLogic.steganography(self, messages)
 
-    elif first == "4":
-        messages = StringLogic.ascii(self, messages)
-    else:
-        print("Error: " + messages)
+        elif first == "2":
+            messages = StringLogic.hash(self, messages)
 
-    print("Sending message: " + messages + "\n")
-    mySocket.send(messages.encode())
-    print("Message sent.\n")
+        elif first == "3":
+            messages = StringLogic.encryption(self,messages)
 
-mySocket.close()
+        elif first == "4":
+            messages = StringLogic.ascii(self, messages)
+        else:
+            print("Error: " + messages)
+
+        #print("Sending message: " + messages + "\n")
+        #mySocket.send(messages.encode())
+        mySocket.send(messages)
+        print("Message sent.\n")
+
+    mySocket.close()
+
+if __name__ == '__main__':
+    Main()
