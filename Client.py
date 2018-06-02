@@ -7,15 +7,28 @@ import socket, threading, Constants
 import self as self
 import hashlib
 from cryptography.fernet import Fernet
-import base64
+import io
+import os
+from PIL import Image
 
 
 class StringLogic:
 
 
-    def steganography(self, msg):
+    def selfEncryption(self, msg):
+        value = msg[:1]
+        key = 2
+        message = msg[1:]
+        result = ""
 
-        pass
+        for letter in message:
+            asciiValue = ord(letter) + key
+            finalLetter = chr(asciiValue)
+            result = result + finalLetter
+        result = value + result
+        print(result)
+
+        return result.encode()
 
 
     def hash(self, msg):
@@ -63,9 +76,18 @@ def fromValueToList(self, message):
 
 class ReverseStringLogic:
 
-    def reverseSteganography(self,msg):
-        print("Steganography: " + msg)
-        pass
+    def selfDecryption(self,msg):
+        value = msg[:1]
+        message = msg[1:]
+        key = 2
+        result = ""
+
+        for letter in message:
+            asciiValue = ord(letter) - key
+            finalLetter = chr(asciiValue)
+            result = result + finalLetter
+
+        print(result)
 
     def bruteForce(self,msg):
         message = msg[1:]
@@ -111,12 +133,13 @@ class ReverseStringLogic:
 
 def recvMessages(mySocket):
     while True:
-        data =  mySocket.recv(1024).decode()
+        data = mySocket.recv(1024).decode()
         print("Recieved Data")
-        first = data[0]
+
+        first = data[:1]
 
         if first == "1":
-            ReverseStringLogic.reverseSteganography(self, data)
+            ReverseStringLogic.selfDecryption(self,data)
 
         elif first == "2":
             ReverseStringLogic.bruteForce(self, data)
@@ -151,7 +174,7 @@ def Main():
         first = messages[0]
 
         if first == "1":
-            messages = StringLogic.steganography(self, messages)
+            messages = StringLogic.selfEncryption(self, messages)
 
         elif first == "2":
             messages = StringLogic.hash(self, messages)

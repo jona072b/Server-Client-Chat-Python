@@ -1,5 +1,4 @@
-import socket, threading, queue, Constants, time
-
+import socket, threading, queue, Constants
 messages = queue.Queue()
 clients = []
 
@@ -30,7 +29,7 @@ def workerClient(connection, msg_queue):
         #Changes will be made.
         data = connection.recv(1024).decode()
         print("Message recieved from client: " + data)
-        messages.put(data)
+        #messages.put(data)
         msg_queue.put(data)
 
 def broadcast():
