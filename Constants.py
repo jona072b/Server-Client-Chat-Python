@@ -1,7 +1,7 @@
 def getIp():
-    ip = #Type the IP
+    ip = "10.111.176.36"
     return ip
 
 def getPort():
-    port = #Type the port
+    port = 9004
     return port

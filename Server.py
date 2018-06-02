@@ -16,8 +16,10 @@ def listenForCLients(socket):
     while True:
         #3-way handshake
         conn, add = socket.accept()
+
         #Saving to client list
         clients.append(conn)
+        print("Client added")
         #Making new thread for new client
         T_newClient = threading.Thread(target= workerClient, args=(conn,))
         T_newClient.start()
@@ -27,12 +29,14 @@ def workerClient(connection):
     while True:
         #Changes will be made.
         data = connection.recv(1024).decode()
+        print("Message recieved from client: " + data)
         messages.put(data)
 
 def broadcast():
     while True:
         if len(clients) > 0:
             #Make some changes
+            print("Sending message to client: " + messages.get())
             sendToAll = str(messages.get()).encode()
             for client in clients:
                 client.send(sendToAll)
