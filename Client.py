@@ -7,9 +7,6 @@ import socket, threading, Constants
 import self as self
 import hashlib
 from cryptography.fernet import Fernet
-import io
-import os
-from PIL import Image
 
 
 class StringLogic:
@@ -22,7 +19,7 @@ class StringLogic:
         result = ""
 
         for letter in message:
-            asciiValue = ord(letter) + key
+            asciiValue = ord(letter) * key
             finalLetter = chr(asciiValue)
             result = result + finalLetter
         result = value + result
@@ -83,11 +80,11 @@ class ReverseStringLogic:
         result = ""
 
         for letter in message:
-            asciiValue = ord(letter) - key
+            asciiValue = int(ord(letter) / key)
             finalLetter = chr(asciiValue)
             result = result + finalLetter
 
-        print(result)
+        return result
 
     def bruteForce(self,msg):
         message = msg[1:]
@@ -98,7 +95,7 @@ class ReverseStringLogic:
                     combo = i+j+k
                     hashedCombo = hashlib.md5(combo.encode('utf-8')).hexdigest()
                     if hashedCombo == message:
-                        print ("bruteforce: " + combo)
+                        return combo
 
 
 
@@ -106,7 +103,7 @@ class ReverseStringLogic:
         key = Constants.getKey()
         cipher_suite = Fernet(key)
         plainText = cipher_suite.decrypt(msg[1:].encode())
-        print(plainText.decode())
+        return plainText.decode()
 
     def reverseAscii(self,msg):
         #Removing first character that is number 4
@@ -120,7 +117,7 @@ class ReverseStringLogic:
             #converts numbers to letters
             result = result + chr(int(letter))
 
-        print ("FROM SERVER" + result)
+        return result
 
 
 
@@ -134,23 +131,25 @@ class ReverseStringLogic:
 def recvMessages(mySocket):
     while True:
         data = mySocket.recv(1024).decode()
-        print("Recieved Data")
+        print("Recieved message: " + data)
 
         first = data[:1]
-
+        message = ""
         if first == "1":
-            ReverseStringLogic.selfDecryption(self,data)
+            message = ReverseStringLogic.selfDecryption(self,data)
 
         elif first == "2":
-            ReverseStringLogic.bruteForce(self, data)
+            message = ReverseStringLogic.bruteForce(self, data)
 
         elif first == "3":
-            ReverseStringLogic.decryption(self, data)
+            message = ReverseStringLogic.decryption(self, data)
 
         elif first == "4":
-            ReverseStringLogic.reverseAscii(self, data)
+            message = ReverseStringLogic.reverseAscii(self, data)
         else:
             print("Error: " + data)
+
+        print("Recieved Message: " + message)
 
 #####################################################
 #                   MAIN                            #
@@ -169,28 +168,29 @@ def Main():
     t.start()
 
     while messages!= 'exit':
-        messages = input(":")
+        messages = input("Write your message here:\n")
 
-        first = messages[0]
+        first = input("What way do you want to send your message?\n1. Easy Encryption\n2. Hash (If sending with hash, no more than 3 letters only lowercase)\n"
+                      "3. Real encryption\n4. Scramble with ASCII\n")
+
+        fullMessage = first + messages
 
         if first == "1":
-            messages = StringLogic.selfEncryption(self, messages)
+            messages = StringLogic.selfEncryption(self, fullMessage)
 
         elif first == "2":
-            messages = StringLogic.hash(self, messages)
+            messages = StringLogic.hash(self, fullMessage)
 
         elif first == "3":
-            messages = StringLogic.encryption(self,messages)
+            messages = StringLogic.encryption(self,fullMessage)
 
         elif first == "4":
-            messages = StringLogic.ascii(self, messages)
+            messages = StringLogic.ascii(self, fullMessage)
         else:
-            print("Error: " + messages)
+            print("Error: " + fullMessage)
 
-        #print("Sending message: " + messages + "\n")
-        #mySocket.send(messages.encode())
+
         mySocket.send(messages)
-        print("Message sent.\n")
 
     mySocket.close()
 

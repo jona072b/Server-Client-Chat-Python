@@ -3,11 +3,11 @@ from cryptography.fernet import Fernet
 
 
 def getIp():
-    ip = "192.168.0.12"
+    ip = "192.168.0.48"
     return ip
 
 def getPort():
-    port = 9001
+    port = 9000
     return port
 
 def getKey():
