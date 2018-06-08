@@ -1,12 +1,16 @@
-import socket, threading, Constants
+import socket
+import threading
+import Constants
+import string
+import self
+import hashlib
+from cryptography.fernet import Fernet
+
 
 
 #####################################################
 #                   String Logic                    #
 #####################################################
-import self as self
-import hashlib
-from cryptography.fernet import Fernet
 
 
 class StringLogic:
@@ -60,7 +64,7 @@ class StringLogic:
 #####################################################
 #            reverse string logic                   #
 #####################################################
-import string
+
 
 
 #this takes a string that is seperated by commas and makes them into a list
@@ -89,7 +93,7 @@ class ReverseStringLogic:
 
     def bruteForce(self,msg):
         message = msg[1:]
-        letterList = string.ascii_lowercase
+        letterList = string.ascii_lowercas
         for i in letterList:
             for j in letterList:
                 for k in letterList:

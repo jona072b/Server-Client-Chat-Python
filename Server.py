@@ -1,17 +1,17 @@
-import socket, threading, queue, Constants
-from self import self
+import socket
+import threading
+import queue
+import Constants
 import hashlib
+import string
+import Logger
+from self import self
 from cryptography.fernet import Fernet
 
 
 #####################################################
 #            reverse string logic                   #
 #####################################################
-import string
-
-import Logger
-
-
 def fromValueToList(self, message):
     #Stripping the string from whitespaces in the end and beginning
     string = message.strip()
@@ -134,7 +134,10 @@ mySocket = socket.socket()
 mySocket.bind((host,port))
 mySocket.listen(1)
 
-"""THREAD FUCTIONS"""
+
+#####################################################
+#                  Thread Functions                 #
+#####################################################
 
 def listenForCLients(socket):
     while True:
