@@ -12,7 +12,6 @@ from cryptography.fernet import Fernet
 #                   String Logic                    #
 #####################################################
 
-
 class StringLogic:
 
     #SelfEncryption method, a method for encryption I have made myself, with a key.
@@ -64,7 +63,7 @@ class StringLogic:
 #####################################################
 #            reverse string logic                   #
 #####################################################
-
+import string
 
 
 #this takes a string that is seperated by commas and makes them into a list
@@ -93,7 +92,7 @@ class ReverseStringLogic:
 
     def bruteForce(self,msg):
         message = msg[1:]
-        letterList = string.ascii_lowercas
+        letterList = string.ascii_lowercase
         for i in letterList:
             for j in letterList:
                 for k in letterList:
