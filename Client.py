@@ -11,7 +11,7 @@ from cryptography.fernet import Fernet
 
 class StringLogic:
 
-
+    #SelfEncryption method, a method for encryption I have made myself, with a key.
     def selfEncryption(self, msg):
         value = msg[:1]
         key = 2
@@ -19,15 +19,16 @@ class StringLogic:
         result = ""
 
         for letter in message:
+            #Takes the ascii value and multiplies it with the key for encryption
             asciiValue = ord(letter) * key
+            #Finds the letter for the final ascii value
             finalLetter = chr(asciiValue)
             result = result + finalLetter
         result = value + result
-        print(result)
 
         return result.encode()
 
-
+    #Hash method. This hashes the value og a string
     def hash(self, msg):
         value = msg[:1]
         message = msg[1:]
@@ -35,7 +36,7 @@ class StringLogic:
         result = value + hashedValue
         return result.encode()
 
-
+    #Encryption method from module Fernet
     def encryption(self,msg):
         value = msg[:1]
         key = Constants.getKey()
@@ -46,7 +47,7 @@ class StringLogic:
         cipher_text = string.encode()
         return cipher_text
 
-
+    #Takes the ascii values from the letters and seperates them with commas
     def ascii(self,msg):
         value = msg[:1]
         message = msg[1:]
@@ -62,7 +63,7 @@ class StringLogic:
 import string
 
 
-
+#this takes a string that is seperated by commas and makes them into a list
 def fromValueToList(self, message):
     #Stripping the string from whitespaces in the end and beginning
     string = message.strip()

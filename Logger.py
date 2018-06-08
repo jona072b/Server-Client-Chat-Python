@@ -2,10 +2,10 @@ import logging
 
 
 def Main(logMessage, numOfBadWords):
-    LOG_FORMAT = "%(levelname)\t %(asctime)\t - %(message)"
+    LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
     logging.basicConfig(filename="logger.log",
-    level=logging.DEBUG,
-    format=LOG_FORMAT)
+        level=logging.DEBUG,
+        format=LOG_FORMAT)
 
     logger = logging.getLogger()
 

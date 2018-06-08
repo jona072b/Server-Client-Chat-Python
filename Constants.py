@@ -7,7 +7,7 @@ def getIp():
     return ip
 
 def getPort():
-    port = 9000
+    port = 9002
     return port
 
 def getKey():
