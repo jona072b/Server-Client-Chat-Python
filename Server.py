@@ -12,6 +12,7 @@ from cryptography.fernet import Fernet
 #####################################################
 #            reverse string logic                   #
 #####################################################
+
 def fromValueToList(self, message):
     #Stripping the string from whitespaces in the end and beginning
     string = message.strip()
