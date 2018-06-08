@@ -3,7 +3,7 @@ from cryptography.fernet import Fernet
 
 
 def getIp():
-    ip = "192.168.0.48"
+    ip = "192.168.0.6"
     return ip
 
 def getPort():

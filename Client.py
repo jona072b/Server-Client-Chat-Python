@@ -1,13 +1,12 @@
 import socket, threading, Constants
+import self as self
+import hashlib
+from cryptography.fernet import Fernet
 
 
 #####################################################
 #                   String Logic                    #
 #####################################################
-import self as self
-import hashlib
-from cryptography.fernet import Fernet
-
 
 class StringLogic:
 
